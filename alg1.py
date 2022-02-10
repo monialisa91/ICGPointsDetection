@@ -31,8 +31,6 @@ def plotICGECG(data_icg, data_ecg):
 files = glob("01_RawData/*BL.mat")
 files.sort(key=natural_keys)
 
-files2 = glob("02_FilteredData/*BL.mat")
-files2.sort(key=natural_keys)
 # 2. DATA PARAMETERS
 
 lim = 1000
@@ -64,13 +62,17 @@ data_icg = icg.baseline()
 
 # 4. FIDUCIAL POINTS DETECTION
 
-r = points(data_ecg, data_icg, fs)
-Rpoints = r.R_peak_detection()
-Cpoints = r.C_point_detection()
-print(Cpoints)
+det = points(data_ecg, data_icg, fs)
+Rpoints = det.R_peak_detection()
+Cpoints = det.C_point_detection()
+Bpoints = det.B_point_detection()
+print(Bpoints)
 
 plt.plot(np.arange(len(data_icg)), data_icg)
 plt.scatter(Cpoints, data_icg[Cpoints])
+plt.scatter(Bpoints, data_icg[Bpoints])
+
+
 plt.show()
 
 
