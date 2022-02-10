@@ -107,9 +107,25 @@ class points():
             ip = td[i] # initial point
             mp = td[i+1] # middle point
             fp = td[i+2] # final point
-            print(ip, mp, fp)
             if(mp<ip and mp<fp):
                 return i+1
+        return None
+
+    def findX0(self, i):
+        '''
+        X0 - first negative minimum right to the C point
+        '''
+        Cpoint = self.C_point_detection()[i]
+        neg = False
+        k = 0
+        while(neg == False):
+            ip = self.data_icg[Cpoint+k]
+            mp = self.data_icg[Cpoint+k+1]
+            fp = self.data_icg[Cpoint+k+2]
+            if(mp < ip and mp < fp and mp < 0):
+                neg == True
+                return Cpoint + k + 1
+            k +=1
         return None
 
     def crossing(self, B0, fd):
@@ -132,8 +148,6 @@ class points():
         td = np.gradient(sd) # third derivative
         Bpoints = []
         for i in range(len(Cpoints)):
-            print(i)
-            Cpoint = Cpoints[i]
             B0 = self.lineFit(i)
             sp = self.signPattern(i)
             if(sp == True):
@@ -143,6 +157,29 @@ class points():
                 B = self.crossing(B0, fd)
                 Bpoints.append(B)
         return np.array(Bpoints)
+
+    def X_point_detection(self):
+        Cpoints = self.C_point_detection()
+        fd = np.gradient(self.data_icg)  # first derivative
+        sd = np.gradient(fd)  # second derivative
+        td = np.gradient(sd)  # third derivative
+        X_points = []
+        for i in range(len(Cpoints)):
+            print(i)
+            X0 = self.findX0(i)
+            print(Cpoints[i], X0)
+            minimum = False
+            k = 0
+            while(minimum == False):
+                ip = td[X0-k]
+                mp = td[X0-k-1]
+                fp = td[X0-k-2]
+                if(mp < fp and mp < ip):
+                    minimum = True
+                    X_points.append(X0-k-1)
+                else:
+                    k += 1
+        return np.array(X_points)
 
 
 

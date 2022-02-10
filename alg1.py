@@ -66,11 +66,12 @@ det = points(data_ecg, data_icg, fs)
 Rpoints = det.R_peak_detection()
 Cpoints = det.C_point_detection()
 Bpoints = det.B_point_detection()
-print(Bpoints)
+Xpoints = det.X_point_detection()
 
 plt.plot(np.arange(len(data_icg)), data_icg)
 plt.scatter(Cpoints, data_icg[Cpoints])
 plt.scatter(Bpoints, data_icg[Bpoints])
+plt.scatter(Xpoints, data_icg[Xpoints])
 
 
 plt.show()
